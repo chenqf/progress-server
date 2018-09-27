@@ -1,7 +1,6 @@
 
 const controller = require('../lib/controller').factory(__filename);
 const db = require('../lib/mysql');
-const userService = require('../services/user');
 controller.requestMapping('/word');
 
 
@@ -24,7 +23,6 @@ controller.requestMapping('/word');
 
 
 controller.all('/query', async (ctx,params,next) => {
-    await userService.checkToken(ctx);
     let data = await db.query('word');
     ctx.body = data;
 });

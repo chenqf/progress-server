@@ -28,7 +28,6 @@ controller.all('/login', async (ctx,params,next) => {
     }
     let item = items[0],
         token = item.token;
-    console.log(userService.checkToken(ctx));
     ctx.cookies.set('token', token, {
         path:'/',       // 写cookie所在的路径
         maxAge: 365 * 24 * 60 * 60 * 1000,   // cookie有效时长

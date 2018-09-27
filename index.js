@@ -10,10 +10,12 @@ const app = new Koa();
 const staticPath = './static';
 const config = require('./config');
 const controller = require('./lib/controller');
+const userService = require('./services/user');
 
 require('./lib/pool')
 
 app.use(bodyParser());//解析post请求中的参数
+
 
 app.use(async function ( ctx, next) {
     let query = Object.assign({},ctx.query,ctx.request.body);
@@ -44,12 +46,19 @@ app.use( async function ( ctx, next ) {
         ctx.status = 200;
         ctx.body = {
             success:false,
-            code: -1,
+            code: error.code ? error.code : -1,
             message: typeof error === 'string' ? error : error.message,
             timestamp:Date.now()
         };
     }
-})
+});
+/*先校验是否登录了*/
+app.use(async function ( ctx, next) {
+    if(ctx.path !== '/user/register'){
+        await userService.checkToken(ctx);
+    }
+    await next();
+});
 
 app.use(koaStatic(path.join( __dirname,  staticPath)));
 
