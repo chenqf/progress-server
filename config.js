@@ -2,5 +2,9 @@
 
 
 module.exports = {
-    PORT:3001
+    PORT:3001,
+    HOST     : '45.77.71.18',
+    USER     : 'root',
+    PASSWORD : '',
+    DATABASE : 'memory'
 };

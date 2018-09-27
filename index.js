@@ -13,6 +13,21 @@ const controller = require('./lib/controller');
 
 app.use(bodyParser());//解析post请求中的参数
 
+app.use(async function ( ctx, next) {
+    let query = Object.assign({},ctx.query,ctx.request.body);
+    ctx.params = query;
+    await next();
+});
+
+app.use( async function ( ctx, next)  {
+    ctx.set('Access-Control-Allow-Credentials', 'true');
+    ctx.set('Access-Control-Allow-Origin', '*');
+    ctx.set('Access-Control-Allow-Headers', 'X-Requested-With');
+    ctx.set('Access-Control-Allow-Methods','PUT,POST,GET,DELETE,OPTIONS');
+    ctx.set('X-Powered-By',' 3.2.1');
+    await next();
+});
+
 app.use(koaStatic(path.join( __dirname,  staticPath)));
 
 
