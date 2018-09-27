@@ -30,6 +30,27 @@ app.use( async function ( ctx, next)  {
     await next();
 });
 
+app.use( async function ( ctx, next ) {
+    //先去执行路由
+    try{
+        await next();
+        ctx.body = {
+            code: 0,
+            success:true,
+            data: ctx.body || [],
+            timestamp:Date.now()
+        };
+    }catch(error){
+        ctx.status = 200;
+        ctx.body = {
+            success:false,
+            code: -1,
+            message: typeof error === 'string' ? error : error.message,
+            timestamp:Date.now()
+        };
+    }
+})
+
 app.use(koaStatic(path.join( __dirname,  staticPath)));
 
 
