@@ -11,6 +11,8 @@ const staticPath = './static';
 const config = require('./config');
 const controller = require('./lib/controller');
 
+require('./lib/pool')
+
 app.use(bodyParser());//解析post请求中的参数
 
 app.use(async function ( ctx, next) {
