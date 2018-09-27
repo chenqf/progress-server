@@ -34,7 +34,9 @@ controller.all('/update', async (ctx,params,next) => {
 
 
 controller.all('/query', async (ctx,params,next) => {
-    let data = await db.query('SELECT * from user;');
+    let data = await db.query('user',{
+        id:1
+    });
     ctx.body = data;
 });
 
