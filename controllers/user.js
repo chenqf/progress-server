@@ -2,27 +2,26 @@
 const controller = require('../lib/controller').factory(__filename);
 const db = require('../lib/mysql');
 const md5 = require('md5');
-const userService = require('../services/user');
+const Sql = require('../lib/sql');
 controller.requestMapping('/user');
 
 
 controller.all('/register', async (ctx,params,next) => {
+    if(!params.name || !params.password){
+        throw new Error('用户名密码不可为空')
+    }
     let createTime = Date.now();
     let token = md5(`${params.password}_${createTime}`);
-    let data = await db.insert('user',{
-        name:params.name,
-        password:md5(params.password),
-        token,
-        createTime
-    });
+    let sql = new Sql('user');
+    sql.set({name:params.name,password:md5(params.password),token,createTime});
+    let data = await db.insert(sql);
     ctx.body = data;
 });
 
 controller.all('/login', async (ctx,params,next) => {
-    let items = await db.query('user',{
-        name:params.name,
-        password:md5(params.password)
-    });
+    let sql = new Sql('user');
+    sql.whereEqual({name:params.name,password:md5(params.password)});
+    let items = await db.query(sql);
     if(!items.length){
         throw new Error('用户名或密码错误')
     }
@@ -36,33 +35,6 @@ controller.all('/login', async (ctx,params,next) => {
     });
     ctx.body = item;
 });
-
-
-// controller.all('/delete', async (ctx,params,next) => {
-//     let data = await db.delete('user',{
-//         name:'cqf1',
-//         password:'pwd1',
-//     });
-//     ctx.body = data;
-// });
-
-// controller.all('/update', async (ctx,params,next) => {
-//     let data = await db.update('user',{
-//         name:'chenqifeng'
-//     },{
-//         id:7
-//     });
-//     ctx.body = data;
-// });
-
-
-// controller.all('/query', async (ctx,params,next) => {
-//     let data = await db.query('user',{
-//         id:1
-//     });
-//     ctx.body = data;
-// });
-
 
 
 

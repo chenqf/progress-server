@@ -21,13 +21,16 @@
   },
   "homepage": "https://github.com/chenqf/memory_and_remember#readme",
   "dependencies": {
+    "axios": "^0.18.0",
     "files-tree": "^1.0.8",
+    "install": "^0.12.1",
     "koa": "^2.5.3",
     "koa-bodyparser": "^4.2.1",
     "koa-router": "^7.4.0",
     "koa-static": "^5.0.0",
     "md5": "^2.2.1",
-    "mysql": "^2.16.0"
+    "mysql": "^2.16.0",
+    "npm": "^6.4.1"
   },
   "devDependencies": {
     "nodemon": "^1.18.4"

@@ -50,12 +50,16 @@ app.use( async function ( ctx, next ) {
             message: typeof error === 'string' ? error : error.message,
             timestamp:Date.now()
         };
+        setTimeout(()=>{
+            throw error;
+        },50);
     }
 });
 /*先校验是否登录了*/
 app.use(async function ( ctx, next) {
-    if(ctx.path !== '/user/register'){
-        await userService.checkToken(ctx);
+    if(ctx.path !== '/user/register' && ctx.path !== '/user/login'){
+        let data = await userService.checkToken(ctx);
+        ctx.userId = data.id;
     }
     await next();
 });

@@ -1,30 +1,37 @@
 
 const controller = require('../lib/controller').factory(__filename);
 const db = require('../lib/mysql');
+const wordService = require('../services/word');
+
 controller.requestMapping('/word');
 
 
-// controller.all('/delete', async (ctx,params,next) => {
-//     let data = await db.delete('user',{
-//         name:'cqf1',
-//         password:'pwd1',
-//     });
-//     ctx.body = data;
-// });
-
-// controller.all('/update', async (ctx,params,next) => {
-//     let data = await db.update('user',{
-//         name:'chenqifeng'
-//     },{
-//         id:7
-//     });
-//     ctx.body = data;
-// });
-
-
-controller.all('/query', async (ctx,params,next) => {
-    let data = await db.query('word');
+controller.all('/base/search',async(ctx,params,next) =>{
+    if(!params.q){
+        throw new Error('请输入要查询的单词')
+    }
+    let data = await wordService.baseSearch(params.q,ctx)
     ctx.body = data;
+});
+
+controller.all('/search',async(ctx,params,next) =>{
+    if(!params.q){
+        throw new Error('请输入要查询的单词')
+    }
+    let data = await wordService.search(params.q,ctx);
+    ctx.body = data;
+});
+
+controller.all('/queryByPreDate', async (ctx,params,next) => {
+    let pre = Number(params.pre) || 0;
+    let items =  await wordService.queryByPreDate(pre,params.startNum,params.pageCount,ctx);
+    let totalCount =  await wordService.queryByPreDateCount(pre,ctx);
+    ctx.body = { items,totalCount };
+});
+
+controller.all('/queryRandom', async (ctx,params,next) => {
+    let items =  await wordService.queryRandom(ctx);
+    ctx.body = { items };
 });
 
 
