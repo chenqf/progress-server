@@ -21,6 +21,9 @@ controller.all('/register', async (ctx,params,next) => {
 
 controller.all('/login', async (ctx,params,next) => {
     let sql = new Sql('user');
+    if(!params.name || !params.password){
+        throw new Error('用户名和密码不能为空')
+    }
     sql.whereEqual({name:params.name,password:md5(params.password)});
     let items = await db.query(sql);
     if(!items.length){

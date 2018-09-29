@@ -51,7 +51,7 @@ app.use( async function ( ctx, next ) {
             timestamp:Date.now()
         };
         setTimeout(()=>{
-            throw error;
+            console.log(error);
         },50);
     }
 });
