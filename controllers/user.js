@@ -3,6 +3,7 @@ const controller = require('../lib/controller').factory(__filename);
 const db = require('../lib/mysql');
 const md5 = require('md5');
 const Sql = require('../lib/sql');
+const userService = require('../services/user');
 controller.requestMapping('/user');
 
 
@@ -34,6 +35,13 @@ controller.all('/login', async (ctx,params,next) => {
         httpOnly:true,  // 是否只用于http请求中获取
     });
     ctx.body = item;
+});
+
+
+
+controller.all('/check', async (ctx,params,next) => {
+    let data = await userService.checkToken(ctx);
+    ctx.body = data;
 });
 
 

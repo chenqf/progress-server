@@ -11,7 +11,7 @@ exports.checkToken = async function (ctx) {
         throw new AuthError('暂无权限，请重新登录')
     }
     let sql = new Sql('user');
-    sql.whereEqual({token})
+    sql.whereEqual({token});
     let items = await db.query(sql);
     if(!items.length){
         throw new AuthError('暂无权限，请重新登录')
