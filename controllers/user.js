@@ -35,7 +35,7 @@ controller.all('/login', async (ctx,params,next) => {
         path:'/',       // 写cookie所在的路径
         maxAge: 365 * 24 * 60 * 60 * 1000,   // cookie有效时长
         expires:new Date(Date.now() + 365 * 24 * 60 * 60 * 1000), // cookie失效时间
-        httpOnly:true,  // 是否只用于http请求中获取
+        httpOnly:false,  // 是否只用于http请求中获取
     });
     ctx.body = item;
 });

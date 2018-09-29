@@ -25,7 +25,8 @@ app.use(async function ( ctx, next) {
 
 app.use( async function ( ctx, next)  {
     ctx.set('Access-Control-Allow-Credentials', 'true');
-    ctx.set('Access-Control-Allow-Origin', '*');
+    // ctx.set('Access-Control-Allow-Origin', '*');
+    ctx.set('Access-Control-Allow-Origin', 'http://10.13.1.93:3000');
     ctx.set('Access-Control-Allow-Headers', 'X-Requested-With');
     ctx.set('Access-Control-Allow-Methods','PUT,POST,GET,DELETE,OPTIONS');
     ctx.set('X-Powered-By',' 3.2.1');

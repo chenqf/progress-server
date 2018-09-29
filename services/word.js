@@ -30,18 +30,22 @@ exports.search = async function (word,ctx) {
     let sign = md5(`${APP_KEY}${word}${SALT}${KEY}`);
     let url = `http://openapi.youdao.com/api?q=${encodeURI(word)}&from=${FROM}&to=${TO}&appKey=${APP_KEY}&salt=${SALT}&sign=${sign}`;
     let response = await axios.get(url);
-    let basic = response.data.basic;
-    let webdict = response.data.webdict || {};
-    let usPhonetic = basic['us-phonetic'] || basic['uk-phonetic'] || basic['phonetic'];
-    let ukPhonetic = basic['uk-phonetic'] || basic['us-phonetic'] || basic['phonetic'];
-    let phonetic = basic['phonetic'] || basic['us-phonetic'] || basic['uk-phonetic'] ;
-    let explains = JSON.stringify(basic.explains);
-    let dictUrl = webdict.url;
-    let wfs = JSON.stringify(basic.wfs || []);
-    let params = {fkUserId,text:word,usPhonetic,ukPhonetic,phonetic,randomReview:0,explains,dictUrl,wfs,createTime:Date.now()};
-    let sql = new Sql('word').set(params);
-    let id = await db.insert(sql);
-    return Object.assign({id},params)
+    try{
+        let basic = response.data.basic;
+        let webdict = response.data.webdict || {};
+        let usPhonetic = basic['us-phonetic'] || basic['uk-phonetic'] || basic['phonetic'];
+        let ukPhonetic = basic['uk-phonetic'] || basic['us-phonetic'] || basic['phonetic'];
+        let phonetic = basic['phonetic'] || basic['us-phonetic'] || basic['uk-phonetic'] ;
+        let explains = JSON.stringify(basic.explains);
+        let dictUrl = webdict.url;
+        let wfs = JSON.stringify(basic.wfs || []);
+        let params = {fkUserId,text:word,usPhonetic,ukPhonetic,phonetic,randomReview:0,explains,dictUrl,wfs,createTime:Date.now()};
+        let sql = new Sql('word').set(params);
+        let id = await db.insert(sql);
+        return Object.assign({id},params)
+    }catch (err){
+        throw new Error('查询的单词有误')
+    }
 };
 
 
