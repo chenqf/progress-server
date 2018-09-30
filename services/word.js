@@ -23,10 +23,19 @@ exports.baseSearch = async function (word,ctx) {
  */
 exports.search = async function (word,ctx) {
     let fkUserId = ctx.userId;
-    let querySql = new Sql('word').whereEqual({fkUserId,text:word});
-    let results = await db.query(querySql);
-    if(results.length) return results[0];
-
+    let wordSql = new Sql('word').whereEqual({text:word});
+    let results = await db.query(wordSql);
+    if(results.length){
+        let fkWordId = results[0].id;
+        let userWordSql = new Sql('user_word').whereEqual({fkUserId,fkWordId});
+        let res = await db.query(userWordSql);
+        if(!res.length){
+            results[0].new = true;
+            userWordSql.set({fkUserId,fkWordId,createTime:Date.now()});
+            await db.insert(userWordSql);
+        }
+        return results[0];
+    }
     let sign = md5(`${APP_KEY}${word}${SALT}${KEY}`);
     let url = `http://openapi.youdao.com/api?q=${encodeURI(word)}&from=${FROM}&to=${TO}&appKey=${APP_KEY}&salt=${SALT}&sign=${sign}`;
     let response = await axios.get(url);
@@ -42,6 +51,9 @@ exports.search = async function (word,ctx) {
         let params = {fkUserId,text:word,usPhonetic,ukPhonetic,phonetic,randomReview:0,explains,dictUrl,wfs,createTime:Date.now()};
         let sql = new Sql('word').set(params);
         let id = await db.insert(sql);
+
+        let userWordSql = new Sql('user_word').set({fkUserId,fkWordId:id,createTime:Date.now()});
+        await db.insert(userWordSql);
         return Object.assign({id,'new':true},params)
     }catch (err){
         throw new Error('查询的单词有误')
@@ -53,13 +65,8 @@ exports.queryByPreDate = async function (pre = 0,startNum,pageCount,order = 'ASC
     let fkUserId = ctx.userId;
     let start = tool.getTodayStart() - pre * 24 *60 * 60* 1000;
     let end = tool.getTodayEnd() - pre * 24 *60 * 60* 1000;
-    let sql = new Sql('word');
-    sql.whereEqual({fkUserId})
-        .whereGtEqual({createTime:start})
-        .whereLtEqual({createTime:end})
-        .orderBy('id',order)
-        .limit(startNum,pageCount);
-    let items = await db.query(sql);
+    let sql = `SELECT w.* FROM user_word uw, word w WHERE uw.fk_word_id = w.id AND  uw.fk_user_id = ${fkUserId} AND uw.create_time >= ${start} AND uw.create_time <= ${end} ORDER BY w.id DESC `;
+    let items = await db.queryBySql(sql);
     return items;
 };
 
