@@ -24,7 +24,7 @@ controller.all('/search',async(ctx,params,next) =>{
 
 controller.all('/queryByPreDate', async (ctx,params,next) => {
     let pre = Number(params.pre) || 0;
-    let items =  await wordService.queryByPreDate(pre,params.startNum,params.pageCount,ctx);
+    let items =  await wordService.queryByPreDate(pre,params.startNum,params.pageCount,params.order,ctx);
     let totalCount =  await wordService.queryByPreDateCount(pre,ctx);
     ctx.body = { items,totalCount };
 });

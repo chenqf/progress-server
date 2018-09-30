@@ -42,14 +42,14 @@ exports.search = async function (word,ctx) {
         let params = {fkUserId,text:word,usPhonetic,ukPhonetic,phonetic,randomReview:0,explains,dictUrl,wfs,createTime:Date.now()};
         let sql = new Sql('word').set(params);
         let id = await db.insert(sql);
-        return Object.assign({id},params)
+        return Object.assign({id,'new':true},params)
     }catch (err){
         throw new Error('查询的单词有误')
     }
 };
 
 
-exports.queryByPreDate = async function (pre = 0,startNum,pageCount,ctx) {
+exports.queryByPreDate = async function (pre = 0,startNum,pageCount,order = 'ASC',ctx) {
     let fkUserId = ctx.userId;
     let start = tool.getTodayStart() - pre * 24 *60 * 60* 1000;
     let end = tool.getTodayEnd() - pre * 24 *60 * 60* 1000;
@@ -57,7 +57,7 @@ exports.queryByPreDate = async function (pre = 0,startNum,pageCount,ctx) {
     sql.whereEqual({fkUserId})
         .whereGtEqual({createTime:start})
         .whereLtEqual({createTime:end})
-        .orderBy('id')
+        .orderBy('id',order)
         .limit(startNum,pageCount);
     let items = await db.query(sql);
     return items;
