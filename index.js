@@ -12,7 +12,7 @@ const config = require('./config');
 const controller = require('./lib/controller');
 const userService = require('./services/user');
 
-require('./lib/pool')
+require('./lib/pool');
 
 app.use(bodyParser());//解析post请求中的参数
 
@@ -58,7 +58,7 @@ app.use( async function ( ctx, next ) {
 });
 /*先校验是否登录了*/
 app.use(async function ( ctx, next) {
-    if(ctx.path !== '/user/register' && ctx.path !== '/user/login' && ctx.path !== '/user/check'){
+    if(ctx.method.toUpperCase() === 'POST' && ctx.path !== '/user/register' && ctx.path !== '/user/login' && ctx.path !== '/user/check'){
         let data = await userService.checkToken(ctx);
         ctx.userId = data.id;
     }
