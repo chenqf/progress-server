@@ -29,6 +29,23 @@ controller.post('/queryByPreDate', async (ctx,params,next) => {
     ctx.body = { items,totalCount:items.length };
 });
 
+controller.post('/queryReviewNum', async (ctx,params,next) => {
+    let items = await Promise.all([
+        wordService.queryByPreDate(1,ctx),
+        wordService.queryByPreDate(2,ctx),
+        wordService.queryByPreDate(4,ctx),
+        wordService.queryByPreDate(7,ctx),
+        wordService.queryByPreDate(15,ctx),
+        wordService.queryByPreDate(30,ctx),
+    ]);
+
+    ctx.body = items.map((list)=>list.length);
+});
+
+
+
+
+
 controller.post('/queryRandom', async (ctx,params,next) => {
     let items =  await wordService.queryRandom(ctx);
     ctx.body = { items };

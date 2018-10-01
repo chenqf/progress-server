@@ -61,7 +61,7 @@ exports.search = async function (word,ctx) {
 };
 
 
-exports.queryByPreDate = async function (pre = 0,startNum,pageCount,order = 'ASC',ctx) {
+exports.queryByPreDate = async function (pre = 0,ctx) {
     let fkUserId = ctx.userId;
     let start = tool.getTodayStart() - pre * 24 *60 * 60* 1000;
     let end = tool.getTodayEnd() - pre * 24 *60 * 60* 1000;
