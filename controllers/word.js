@@ -35,7 +35,18 @@ controller.post('/queryAll', async (ctx,params,next) => {
 });
 
 
-
+controller.post('/queryReview', async (ctx,params,next) => {
+    let items = await Promise.all([
+        wordService.queryByPreDate(1,ctx),
+        wordService.queryByPreDate(2,ctx),
+        wordService.queryByPreDate(4,ctx),
+        wordService.queryByPreDate(7,ctx),
+        wordService.queryByPreDate(15,ctx),
+        wordService.queryByPreDate(30,ctx),
+    ]);
+    console.log(items);
+    ctx.body = {items}
+});
 
 
 controller.post('/queryReviewNum', async (ctx,params,next) => {
