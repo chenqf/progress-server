@@ -44,7 +44,6 @@ controller.post('/queryReview', async (ctx,params,next) => {
         wordService.queryByPreDate(15,ctx),
         wordService.queryByPreDate(30,ctx),
     ]);
-    console.log(items);
     ctx.body = {items}
 });
 

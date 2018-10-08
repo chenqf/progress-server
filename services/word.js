@@ -65,7 +65,21 @@ exports.queryByPreDate = async function (pre = 0,ctx) {
     let fkUserId = ctx.userId;
     let start = tool.getTodayStart() - pre * 24 *60 * 60* 1000;
     let end = tool.getTodayEnd() - pre * 24 *60 * 60* 1000;
-    let sql = `SELECT w.* FROM user_word uw, word w WHERE uw.fk_word_id = w.id AND  uw.fk_user_id = ${fkUserId} AND uw.create_time >= ${start} AND uw.create_time <= ${end} ORDER BY w.id DESC `;
+    let sql = `SELECT 
+                    w.dictUrl w.explains w.id w.phonetic w.text w.ukPhonetic w.usPhonetic w.wfs
+                FROM 
+                    user_word uw, word w 
+                WHERE 
+                    uw.fk_word_id = w.id 
+                AND  
+                    uw.fk_user_id = ${fkUserId} 
+                AND 
+                    uw.create_time >= ${start} 
+                AND 
+                    uw.create_time <= ${end} 
+                ORDER BY 
+                    uw.id DESC `;
+
     let items = await db.queryBySql(sql);
     return items;
 };
