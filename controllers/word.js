@@ -1,6 +1,7 @@
 
 const controller = require('../lib/controller').factory(__filename);
 const db = require('../lib/mysql');
+const Sql = require('../lib/sql');
 const wordService = require('../services/word');
 
 controller.requestMapping('/word');
@@ -61,6 +62,16 @@ controller.post('/queryReviewNum', async (ctx,params,next) => {
     ctx.body = items.map((list)=>list.length);
 });
 
+
+controller.post('/updateCreateTime', async (ctx,{id,createTime},next) => {
+    if(!id || !createTime){
+        throw new Error('缺少参数！')
+    }
+    let sql = new Sql('user_word');
+    sql.set({createTime}).whereEqual({id});
+    let data = await db.update(sql);
+    ctx.body = data;
+});
 
 
 
