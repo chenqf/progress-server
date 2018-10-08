@@ -93,7 +93,7 @@ exports.queryByPreDate = async function (pre = 0,ctx) {
     return items;
 };
 
-exports.queryAll = async function (pre = 0,ctx) {
+exports.queryAll = async function (ctx) {
     let fkUserId = ctx.userId;
     let sql = `SELECT w.* FROM user_word uw, word w WHERE uw.fk_word_id = w.id AND  uw.fk_user_id = ${fkUserId} ORDER BY uw.create_time DESC `;
     let items = await db.queryBySql(sql);
