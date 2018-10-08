@@ -66,13 +66,13 @@ exports.queryByPreDate = async function (pre = 0,ctx) {
     let start = tool.getTodayStart() - pre * 24 *60 * 60* 1000;
     let end = tool.getTodayEnd() - pre * 24 *60 * 60* 1000;
     let sql = `SELECT 
-                    w.dictUrl , 
+                    w.dict_url , 
                     w.explains ,
                     w.id ,
                     w.phonetic ,
                     w.text ,
-                    w.ukPhonetic ,
-                    w.usPhonetic ,
+                    w.uk_phonetic ,
+                    w.us_phonetic ,
                     w.wfs , 
                     uw.create_time , 
                     uw.id as user_word_id
