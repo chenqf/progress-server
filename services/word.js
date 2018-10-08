@@ -95,7 +95,26 @@ exports.queryByPreDate = async function (pre = 0,ctx) {
 
 exports.queryAll = async function (ctx) {
     let fkUserId = ctx.userId;
-    let sql = `SELECT w.* FROM user_word uw, word w WHERE uw.fk_word_id = w.id AND  uw.fk_user_id = ${fkUserId} ORDER BY uw.create_time DESC `;
+    let sql = `SELECT 
+                    w.dict_url , 
+                    w.explains ,
+                    w.id ,
+                    w.phonetic ,
+                    w.text ,
+                    w.uk_phonetic ,
+                    w.us_phonetic ,
+                    w.wfs , 
+                    uw.create_time , 
+                    uw.id as user_word_id
+                FROM 
+                    user_word uw, word w 
+                WHERE 
+                    uw.fk_word_id = w.id 
+                AND  
+                    uw.fk_user_id = ${fkUserId} 
+                ORDER BY 
+                    uw.create_time DESC 
+                `;
     let items = await db.queryBySql(sql);
     return items;
 };
