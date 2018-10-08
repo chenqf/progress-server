@@ -29,6 +29,15 @@ controller.post('/queryByPreDate', async (ctx,params,next) => {
     ctx.body = { items,totalCount:items.length };
 });
 
+controller.post('/queryAll', async (ctx,params,next) => {
+    let items =  await wordService.queryAll(ctx);
+    ctx.body = { items,totalCount:items.length };
+});
+
+
+
+
+
 controller.post('/queryReviewNum', async (ctx,params,next) => {
     let items = await Promise.all([
         wordService.queryByPreDate(1,ctx),
