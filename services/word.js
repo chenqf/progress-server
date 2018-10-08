@@ -74,7 +74,8 @@ exports.queryByPreDate = async function (pre = 0,ctx) {
                     w.ukPhonetic ,
                     w.usPhonetic ,
                     w.wfs , 
-                    uw.create_time
+                    uw.create_time , 
+                    uw.id as user_word_id
                 FROM 
                     user_word uw, word w 
                 WHERE 
