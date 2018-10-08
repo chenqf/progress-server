@@ -66,7 +66,7 @@ exports.queryByPreDate = async function (pre = 0,ctx) {
     let start = tool.getTodayStart() - pre * 24 *60 * 60* 1000;
     let end = tool.getTodayEnd() - pre * 24 *60 * 60* 1000;
     let sql = `SELECT 
-                    w.dictUrl w.explains w.id w.phonetic w.text w.ukPhonetic w.usPhonetic w.wfs
+                    w.*
                 FROM 
                     user_word uw, word w 
                 WHERE 
