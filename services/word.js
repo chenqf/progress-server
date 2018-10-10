@@ -93,7 +93,7 @@ exports.queryByPreDate = async function (pre = 0,ctx) {
     return items;
 };
 
-exports.queryAll = async function (ctx) {
+exports.queryAll = async function (startNum,pageCount,ctx) {
     let fkUserId = ctx.userId;
     let sql = `SELECT 
                     w.dict_url , 
@@ -114,10 +114,29 @@ exports.queryAll = async function (ctx) {
                     uw.fk_user_id = ${fkUserId} 
                 ORDER BY 
                     uw.create_time DESC 
+                LIMIT
+                    ${startNum},${pageCount}
                 `;
     let items = await db.queryBySql(sql);
     return items;
 };
+
+exports.queryAllCount = async function (ctx) {
+    let fkUserId = ctx.userId;
+    let sql = `SELECT 
+                    count(*)
+                FROM 
+                    user_word uw, word w 
+                WHERE 
+                    uw.fk_word_id = w.id 
+                AND  
+                    uw.fk_user_id = ${fkUserId} 
+                `;
+    let items = await db.countBySql(sql);
+    return items;
+};
+
+
 
 
 exports.queryByPreDateCount = async function (pre = 0,ctx) {

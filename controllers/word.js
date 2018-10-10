@@ -32,9 +32,10 @@ controller.post('/queryByPreDate', async (ctx,params,next) => {
 /**
  * 查询用户下的所有单词
  */
-controller.post('/queryAll', async (ctx,params,next) => {
-    let items =  await wordService.queryAll(ctx);
-    ctx.body = { items,totalCount:items.length };
+controller.post('/queryAll', async (ctx,{startNum = 0,pageCount = 10},next) => {
+    let items =  await wordService.queryAll(startNum,pageCount,ctx);
+    let count =  await wordService.queryAllCount(ctx);
+    ctx.body = { items,count};
 });
 
 /**
