@@ -4,7 +4,7 @@ const db = require('../lib/mysql');
 const Sql = require('../lib/sql');
 const tool = require('../lib/tool');
 
-controller.requestMapping('/demo');
+controller.requestMapping('/remark');
 
 
 controller.all('/insert', async (ctx,params,next) => {
