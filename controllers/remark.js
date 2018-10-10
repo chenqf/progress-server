@@ -57,7 +57,7 @@ controller.post('/update', async (ctx,params,next) => {
 });
 
 
-controller.post('/query', async (ctx,params,next) => {
+controller.post('/queryByPreDate', async (ctx,params,next) => {
     let fkUserId = ctx.userId;
     if(!fkUserId){
         throw new Error('权限异常！')
