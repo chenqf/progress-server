@@ -7,7 +7,7 @@ const tool = require('../lib/tool');
 controller.requestMapping('/remark');
 
 
-controller.all('/insert', async (ctx,params,next) => {
+controller.post('/insert', async (ctx,params,next) => {
     let content = params.content;
     if(!content){
         throw new Error('缺少内容！')
@@ -22,7 +22,7 @@ controller.all('/insert', async (ctx,params,next) => {
     ctx.body = data;
 });
 
-controller.all('/delete', async (ctx,params,next) => {
+controller.post('/delete', async (ctx,params,next) => {
     let id = params.id;
     if(!id){
         throw new Error('缺少id！')
@@ -37,7 +37,7 @@ controller.all('/delete', async (ctx,params,next) => {
     ctx.body = data;
 });
 
-controller.all('/update', async (ctx,params,next) => {
+controller.post('/update', async (ctx,params,next) => {
     let content = params.content;
     let id = params.id;
     if(!content){
@@ -57,18 +57,20 @@ controller.all('/update', async (ctx,params,next) => {
 });
 
 
-controller.all('/query', async (ctx,params,next) => {
+controller.post('/query', async (ctx,params,next) => {
     let fkUserId = ctx.userId;
     if(!fkUserId){
         throw new Error('权限异常！')
     }
     let sql = new Sql('remark');
-    let pre = params.pre || 0;
+    let pre = Number(params.pre) || 0;
     let start = tool.getTodayStart() - pre * 24 *60 * 60* 1000;
     let end = tool.getTodayEnd() - pre * 24 *60 * 60* 1000;
     sql.whereEqual({fkUserId}).whereGtEqual({createTime:start}).whereLtEqual({createTime:end});
-    let data = await db.query(sql);
-    ctx.body = data;
+    let items = await db.query(sql);
+    ctx.body = {
+        items
+    };
 });
 
 
