@@ -124,7 +124,7 @@ exports.queryAll = async function (startNum,pageCount,ctx) {
 exports.queryAllCount = async function (ctx) {
     let fkUserId = ctx.userId;
     let sql = `SELECT 
-                    count(*)
+                    count(*) as count
                 FROM 
                     user_word uw, word w 
                 WHERE 
@@ -132,8 +132,8 @@ exports.queryAllCount = async function (ctx) {
                 AND  
                     uw.fk_user_id = ${fkUserId} 
                 `;
-    let items = await db.countBySql(sql);
-    return items;
+    let count = await db.countBySql(sql);
+    return count;
 };
 
 
