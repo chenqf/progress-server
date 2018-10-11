@@ -6,5 +6,5 @@ module.exports = {
     HOST     : '45.77.71.18',
     USER     : 'root',
     PASSWORD : process.env.DB_PASSWORD,
-    DATABASE : 'memory'
+    DATABASE : 'word_memory'
 };

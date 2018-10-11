@@ -63,11 +63,16 @@ controller.post('/delete', async (ctx,params,next) => {
     let data = await db.delete(sql);
     ctx.body = data;
 });
+
+
+
+
 /**
- * TODO 下步要做这个
+ * 随机选取count条数据
  */
 controller.post('/queryRandom', async (ctx,params,next) => {
-    let items =  await wordService.queryRandom(ctx);
+    let count = params.count || 5;
+    let items =  await wordService.queryRandom(count,ctx);
     ctx.body = { items };
 });
 

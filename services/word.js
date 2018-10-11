@@ -151,14 +151,30 @@ exports.queryByPreDateCount = async function (pre = 0,ctx) {
     return totalCount;
 };
 
-exports.queryRandom = async function (ctx) {
+exports.queryRandom = async function (count = 5,ctx) {
     let fkUserId = ctx.userId;
-    let start = tool.getTodayStart();
-    let sql = new Sql('word');
-    sql.whereEqual({fkUserId})
-    .whereLtEqual({createTime:start})
-    .random(20);
-
-    let items = await db.query(sql);
+    let sql = `SELECT 
+                    w.id ,
+                    w.dict_url , 
+                    w.explains ,
+                    w.phonetic ,
+                    w.text ,
+                    w.uk_phonetic ,
+                    w.us_phonetic ,
+                    w.wfs , 
+                    uw.create_time , 
+                    uw.id as user_word_id
+                FROM 
+                    user_word uw, word w 
+                WHERE 
+                    uw.fk_word_id = w.id 
+                AND  
+                    uw.fk_user_id = ${fkUserId} 
+                ORDER BY 
+                    RAND()
+                LIMIT
+                    ${count}
+                `;
+    let items = await db.queryBySql(sql);
     return items;
 };
