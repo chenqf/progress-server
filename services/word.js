@@ -93,6 +93,63 @@ exports.queryByPreDate = async function (pre = 0,ctx) {
     return items;
 };
 
+
+exports.queryAllReview = async function (ctx) {
+    let fkUserId = ctx.userId;
+    let start = tool.getTodayStart();
+    let end = tool.getTodayEnd();
+    let sql = `SELECT 
+                    w.dict_url , 
+                    w.explains ,
+                    w.id ,
+                    w.phonetic ,
+                    w.text ,
+                    w.uk_phonetic ,
+                    w.us_phonetic ,
+                    w.wfs , 
+                    uw.create_time , 
+                    uw.id as user_word_id
+                FROM 
+                    user_word uw, word w 
+                WHERE 
+                    uw.fk_word_id = w.id 
+                AND  
+                    uw.fk_user_id = ${fkUserId} 
+                AND
+                    (      uw.create_time >= ${start - 24 *60 * 60* 1000} 
+                        AND 
+                            uw.create_time <= ${end - 24 *60 * 60* 1000} 
+                        OR
+                            uw.create_time >= ${start - 2 * 24 *60 * 60* 1000} 
+                        AND 
+                            uw.create_time <= ${end - 2 * 24 *60 * 60* 1000} 
+                        OR
+                            uw.create_time >= ${start - 4 * 24 *60 * 60* 1000} 
+                        AND 
+                            uw.create_time <= ${end - 4 * 24 *60 * 60* 1000} 
+                        OR
+                            uw.create_time >= ${start - 7 * 24 *60 * 60* 1000} 
+                        AND 
+                            uw.create_time <= ${end - 7 * 24 *60 * 60* 1000} 
+                        OR
+                            uw.create_time >= ${start - 15 * 24 *60 * 60* 1000} 
+                        AND 
+                            uw.create_time <= ${end - 15 * 24 *60 * 60* 1000} 
+                        OR
+                            uw.create_time >= ${start - 30 * 24 *60 * 60* 1000} 
+                        AND 
+                            uw.create_time <= ${end - 30 * 24 *60 * 60* 1000} 
+                    )
+                ORDER BY 
+                    uw.id ASC `;
+
+    let items = await db.queryBySql(sql);
+    return items;
+};
+
+
+
+
 exports.queryAll = async function (startNum,pageCount,ctx) {
     let fkUserId = ctx.userId;
     let sql = `SELECT 

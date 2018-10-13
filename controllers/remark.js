@@ -3,6 +3,7 @@ const controller = require('../lib/controller').factory(__filename);
 const db = require('../lib/mysql');
 const Sql = require('../lib/sql');
 const tool = require('../lib/tool');
+const remarkService = require('../services/remark');
 
 controller.requestMapping('/remark');
 
@@ -71,6 +72,11 @@ controller.post('/queryByPreDate', async (ctx,params,next) => {
     ctx.body = {
         items
     };
+});
+
+controller.post('/queryAllReview', async (ctx,{startNum = 0,pageCount = 10},next) => {
+    let items =  await remarkService.queryAllReview(ctx);
+    ctx.body = { items,count:items.length};
 });
 
 

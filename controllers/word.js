@@ -38,6 +38,12 @@ controller.post('/queryAll', async (ctx,{startNum = 0,pageCount = 10},next) => {
     ctx.body = { items,count};
 });
 
+
+controller.post('/queryAllReview', async (ctx,{startNum = 0,pageCount = 10},next) => {
+    let items =  await wordService.queryAllReview(ctx);
+    ctx.body = { items,count:items.length};
+});
+
 /**
  * 更新 user_word 的创建时间
  */
