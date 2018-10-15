@@ -24,18 +24,32 @@ exports.baseSearch = async function (word,ctx) {
 exports.search = async function (word,ctx) {
     let fkUserId = ctx.userId;
     let wordSql = new Sql('word').whereEqual({text:word});
-    let results = await db.query(wordSql);
+
+
+    let results = await db.query(wordSql);    //单词表中的记录
+
     if(results.length){
-        let fkWordId = results[0].id;
+        let wordItem = results[0];
+        let fkWordId = wordItem.id; // 单词id
         let userWordSql = new Sql('user_word').whereEqual({fkUserId,fkWordId});
-        let res = await db.query(userWordSql);
+        let res = await db.query(userWordSql);// 用户单词表中的记录
+        //不存在用户单词表中的记录
         if(!res.length){
-            results[0].new = true;
+            wordItem.new = true;
             userWordSql.set({fkUserId,fkWordId,createTime:Date.now()});
-            await db.insert(userWordSql);
+            let userWordId = await db.insert(userWordSql);
+            wordItem.userWordId = userWordId;
+            wordItem.createTime = Date.now();
         }
-        return results[0];
+        //存在用户单词表中的记录
+        else{
+            wordItem.userWordId = res[0].id;
+            wordItem.createTime = res[0].createTime;
+        }
+        return wordItem;
     }
+
+
     let sign = md5(`${APP_KEY}${word}${SALT}${KEY}`);
     let url = `http://openapi.youdao.com/api?q=${encodeURI(word)}&from=${FROM}&to=${TO}&appKey=${APP_KEY}&salt=${SALT}&sign=${sign}`;
     let response = await axios.get(url);
@@ -53,8 +67,8 @@ exports.search = async function (word,ctx) {
         let id = await db.insert(sql);
 
         let userWordSql = new Sql('user_word').set({fkUserId,fkWordId:id,createTime:Date.now()});
-        await db.insert(userWordSql);
-        return Object.assign({id,'new':true},params)
+        let userWordId = await db.insert(userWordSql);
+        return Object.assign({id,'new':true,userWordId},params)
     }catch (err){
         throw new Error('查询的单词有误')
     }
@@ -75,7 +89,8 @@ exports.queryByPreDate = async function (pre = 0,ctx) {
                     w.us_phonetic ,
                     w.wfs , 
                     uw.create_time , 
-                    uw.id as user_word_id
+                    uw.id as user_word_id ,
+                    uw.level
                 FROM 
                     user_word uw, word w 
                 WHERE 
@@ -108,7 +123,8 @@ exports.queryAllReview = async function (ctx) {
                     w.us_phonetic ,
                     w.wfs , 
                     uw.create_time , 
-                    uw.id as user_word_id
+                    uw.id as user_word_id ,
+                    uw.level
                 FROM 
                     user_word uw, word w 
                 WHERE 
@@ -162,7 +178,8 @@ exports.queryAll = async function (startNum,pageCount,ctx) {
                     w.us_phonetic ,
                     w.wfs , 
                     uw.create_time , 
-                    uw.id as user_word_id
+                    uw.id as user_word_id ,
+                    uw.level
                 FROM 
                     user_word uw, word w 
                 WHERE 
@@ -220,7 +237,8 @@ exports.queryRandom = async function (count = 5,ctx) {
                     w.us_phonetic ,
                     w.wfs , 
                     uw.create_time , 
-                    uw.id as user_word_id
+                    uw.id as user_word_id ,
+                    uw.level
                 FROM 
                     user_word uw, word w 
                 WHERE 

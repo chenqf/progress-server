@@ -57,6 +57,19 @@ controller.post('/updateCreateTime', async (ctx,{id,createTime},next) => {
     ctx.body = data;
 });
 
+/**
+ * 更新 user_word 的单词级别
+ */
+controller.post('/updateLevel', async (ctx,{id,level},next) => {
+    if(!id || !level){
+        throw new Error('缺少参数！')
+    }
+    let sql = new Sql('user_word');
+    sql.set({level:Number(level)}).whereEqual({id});
+    let data = await db.update(sql);
+    ctx.body = data;
+});
+
 
 
 controller.post('/delete', async (ctx,params,next) => {
