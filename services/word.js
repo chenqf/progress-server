@@ -102,7 +102,7 @@ exports.queryByPreDate = async function (pre = 0,ctx) {
                 AND 
                     uw.create_time <= ${end} 
                 ORDER BY 
-                    uw.id DESC `;
+                    uw.id ASC `;
 
     let items = await db.queryBySql(sql);
     return items;
@@ -157,7 +157,7 @@ exports.queryAllReview = async function (ctx) {
                             uw.create_time <= ${end - 30 * 24 *60 * 60* 1000} 
                     )
                 ORDER BY 
-                    uw.id ASC `;
+                    uw.id DESC `;
 
     let items = await db.queryBySql(sql);
     return items;
