@@ -102,7 +102,7 @@ exports.queryByPreDate = async function (pre = 0,ctx) {
                 AND 
                     uw.create_time <= ${end} 
                 ORDER BY 
-                    uw.id ASC `;
+                    uw.id DESC `;
 
     let items = await db.queryBySql(sql);
     return items;
