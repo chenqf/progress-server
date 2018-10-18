@@ -195,6 +195,38 @@ exports.queryAll = async function (startNum,pageCount,ctx) {
     return items;
 };
 
+
+exports.queryHard = async function (startNum,pageCount,ctx) {
+    let fkUserId = ctx.userId;
+    let sql = `SELECT 
+                    w.dict_url , 
+                    w.explains ,
+                    w.id ,
+                    w.phonetic ,
+                    w.text ,
+                    w.uk_phonetic ,
+                    w.us_phonetic ,
+                    w.wfs , 
+                    uw.create_time , 
+                    uw.id as user_word_id ,
+                    uw.level
+                FROM 
+                    user_word uw, word w 
+                WHERE 
+                    uw.fk_word_id = w.id 
+                AND  
+                    uw.level = 1
+                AND
+                    uw.fk_user_id = ${fkUserId} 
+                ORDER BY 
+                    uw.create_time DESC 
+                LIMIT
+                    ${startNum},${pageCount}
+                `;
+    let items = await db.queryBySql(sql);
+    return items;
+};
+
 exports.queryAllCount = async function (ctx) {
     let fkUserId = ctx.userId;
     let sql = `SELECT 
@@ -203,6 +235,23 @@ exports.queryAllCount = async function (ctx) {
                     user_word uw, word w 
                 WHERE 
                     uw.fk_word_id = w.id 
+                AND  
+                    uw.fk_user_id = ${fkUserId} 
+                `;
+    let count = await db.countBySql(sql);
+    return count;
+};
+
+exports.queryHardCount = async function (ctx) {
+    let fkUserId = ctx.userId;
+    let sql = `SELECT 
+                    count(*) as count
+                FROM 
+                    user_word uw, word w 
+                WHERE 
+                    uw.fk_word_id = w.id 
+                AND  
+                    uw.level = 1
                 AND  
                     uw.fk_user_id = ${fkUserId} 
                 `;

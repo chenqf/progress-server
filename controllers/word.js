@@ -37,6 +37,16 @@ controller.post('/queryAll', async (ctx,{startNum = 0,pageCount = 10},next) => {
     let count =  await wordService.queryAllCount(ctx);
     ctx.body = { items,count};
 });
+
+controller.post('/queryHard', async (ctx,{startNum = 0,pageCount = 10},next) => {
+    let items =  await wordService.queryHard(startNum,pageCount,ctx);
+    let count =  await wordService.queryHardCount(ctx);
+    ctx.body = { items,count};
+});
+
+
+
+
 controller.post('/queryAllCount', async (ctx,params,next) => {
     let count =  await wordService.queryAllCount(ctx);
     ctx.body = { count};
@@ -47,6 +57,7 @@ controller.post('/queryAllReview', async (ctx,{startNum = 0,pageCount = 10},next
     let items =  await wordService.queryAllReview(ctx);
     ctx.body = { items,count:items.length};
 });
+
 
 /**
  * 更新 user_word 的创建时间
