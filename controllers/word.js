@@ -52,6 +52,11 @@ controller.post('/queryAllCount', async (ctx,params,next) => {
     ctx.body = { count};
 });
 
+controller.post('/queryHardCount', async (ctx,params,next) => {
+    let count =  await wordService.queryHardCount(ctx);
+    ctx.body = { count};
+});
+
 
 controller.post('/queryAllReview', async (ctx,{startNum = 0,pageCount = 10},next) => {
     let items =  await wordService.queryAllReview(ctx);
