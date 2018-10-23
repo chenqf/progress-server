@@ -5,12 +5,25 @@ const axios = require('axios');
 const md5 = require('md5');
 const tool = require('../lib/tool');
 const Sql = require('../lib/sql');
+const config = require('../config');
 
-const APP_KEY = '51a433fdcbf4ab82';
-const KEY = 'GO8nt8g99GFycXOgmJA0dC7oeP5zW8Og';
+const APP_KEY = config.WORD_APP_KEY;
+const KEY = config.WORD_KEY;
 const FROM = 'EN';
 const TO = 'zh-CHS';
 const SALT = Math.random().toString(32).slice(2);
+
+const AUDIO_API_KEY = config.AUDIO_API_KEY;
+const AUDIO_SECRET_KEY = config.AUDIO_SECRET_KEY;
+
+
+
+exports.getAudioToken = async function () {
+    let url = `http://openapi.baidu.com/oauth/2.0/token?grant_type=client_credentials&client_id=${AUDIO_API_KEY}&client_secret=${AUDIO_SECRET_KEY}`
+    let response = await axios.get(url);
+    return response.data;
+};
+
 
 exports.baseSearch = async function (word,ctx) {
     let sign = md5(`${APP_KEY}${word}${SALT}${KEY}`);
@@ -24,7 +37,6 @@ exports.baseSearch = async function (word,ctx) {
 exports.search = async function (word,ctx) {
     let fkUserId = ctx.userId;
     let wordSql = new Sql('word').whereEqual({text:word});
-
 
     let results = await db.query(wordSql);    //单词表中的记录
 
@@ -73,6 +85,9 @@ exports.search = async function (word,ctx) {
         throw new Error('查询的单词有误')
     }
 };
+
+
+
 
 
 exports.queryByPreDate = async function (pre = 0,ctx) {

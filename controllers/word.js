@@ -7,6 +7,12 @@ const wordService = require('../services/word');
 controller.requestMapping('/word');
 
 
+
+controller.all('/getAudioToken',async(ctx,params,next) =>{
+    let data = await wordService.getAudioToken(ctx);
+    ctx.body = data;
+});
+
 controller.post('/base/search',async(ctx,params,next) =>{
     if(!params.q){
         throw new Error('请输入要查询的单词')
