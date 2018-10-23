@@ -6,7 +6,7 @@ module.exports = {
     HOST     : '45.77.71.18',
     USER     : 'root',
     PASSWORD : process.env.DB_PASSWORD,
-    DATABASE : 'word_memory',
+    DATABASE : process.env.DB_NAME,
 
     /*有道相关*/
     WORD_APP_KEY:process.env.WORD_APP_KEY,
