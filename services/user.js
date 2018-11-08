@@ -10,16 +10,16 @@ exports.checkToken = async function (ctx) {
     if(!token){
         throw new AuthError('暂无权限，请重新登录')
     }
-    if(config.TOKEN === token){
-        return {id:Number(config.TOKEN_ID)};
-    }else{
-        throw new AuthError('暂无权限，请重新登录')
-    }
-    // let sql = new Sql('user');
-    // sql.whereEqual({token});
-    // let items = await db.query(sql);
-    // if(!items.length){
+    // if(config.TOKEN === token){
+    //     return {id:Number(config.TOKEN_ID)};
+    // }else{
     //     throw new AuthError('暂无权限，请重新登录')
     // }
-    // return items[0];
+    let sql = new Sql('user');
+    sql.whereEqual({token});
+    let items = await db.query(sql);
+    if(!items.length){
+        throw new AuthError('暂无权限，请重新登录')
+    }
+    return items[0];
 };

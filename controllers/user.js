@@ -7,17 +7,17 @@ const userService = require('../services/user');
 controller.requestMapping('/user');
 
 
-// controller.post('/register', async (ctx,params,next) => {
-//     if(!params.name || !params.password){
-//         throw new Error('用户名密码不可为空')
-//     }
-//     let createTime = Date.now();
-//     let token = md5(`${params.password}_${createTime}`);
-//     let sql = new Sql('user');
-//     sql.set({name:params.name,password:md5(params.password),token,createTime});
-//     let data = await db.insert(sql);
-//     ctx.body = data;
-// });
+controller.get('/register', async (ctx,params,next) => {
+    if(!params.name || !params.password){
+        throw new Error('用户名密码不可为空')
+    }
+    let createTime = Date.now();
+    let token = md5(`${params.password}_${createTime}`);
+    let sql = new Sql('user');
+    sql.set({name:params.name,password:md5(params.password),token,createTime});
+    let data = await db.insert(sql);
+    ctx.body = data;
+});
 
 controller.all('/login', async (ctx,params,next) => {
     let sql = new Sql('user');
