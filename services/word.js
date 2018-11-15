@@ -51,11 +51,13 @@ exports.search = async function (word,ctx) {
             userWordSql.set({fkUserId,fkWordId,createTime:Date.now()});
             let userWordId = await db.insert(userWordSql);
             wordItem.userWordId = userWordId;
+            wordItem.level = 0;
             wordItem.createTime = Date.now();
         }
         //存在用户单词表中的记录
         else{
             wordItem.userWordId = res[0].id;
+            wordItem.level = res[0].level;
             wordItem.createTime = res[0].createTime;
         }
         return wordItem;
@@ -80,7 +82,7 @@ exports.search = async function (word,ctx) {
 
         let userWordSql = new Sql('user_word').set({fkUserId,fkWordId:id,createTime:Date.now()});
         let userWordId = await db.insert(userWordSql);
-        return Object.assign({id,'new':true,userWordId},params)
+        return Object.assign({id,'new':true,userWordId,level:0},params)
     }catch (err){
         throw new Error('查询的单词有误')
     }
