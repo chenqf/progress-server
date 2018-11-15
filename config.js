@@ -3,7 +3,7 @@
 
 module.exports = {
     PORT:3001,
-    HOST     : '45.77.71.18',
+    HOST     : '45.76.169.7',
     USER     : 'root',
     PASSWORD : process.env.DB_PASSWORD,
     DATABASE : process.env.DB_NAME,
