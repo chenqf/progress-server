@@ -10,10 +10,10 @@ const app = new Koa();
 const staticPath = './static';
 const config = require('./config');
 const controller = require('./lib/controller');
-const userService = require('./services/user');
-const wordService = require('./services/word');
+// const userService = require('./services/user');
+// const wordService = require('./services/word');
 
-require('./lib/pool');
+// require('./lib/pool');
 
 app.use(bodyParser());//解析post请求中的参数
 
@@ -58,29 +58,29 @@ app.use( async function ( ctx, next ) {
     }
 });
 /*先校验是否登录了*/
-app.use(async function ( ctx, next) {
-    if(/*ctx.method.toUpperCase() === 'POST' &&*/ ctx.path !== '/user/register' && ctx.path !== '/user/login' && ctx.path !== '/user/check'){
-        let data = await userService.checkToken(ctx);
-        ctx.userId = data.id;
-    }
-    await next();
-});
+// app.use(async function ( ctx, next) {
+//     if(/*ctx.method.toUpperCase() === 'POST' &&*/ ctx.path !== '/user/register' && ctx.path !== '/user/login' && ctx.path !== '/user/check'){
+//         // let data = await userService.checkToken(ctx);
+//         // ctx.userId = data.id;
+//     }
+//     await next();
+// });
 
 /*检查是否有百度语音token*/
-app.use(async function ( ctx, next) {
-    let token = ctx.cookies.get('btoken');
-    if(!token){
-        let data = await wordService.getAudioToken();
-        let access_token = data.access_token;
-        ctx.cookies.set('btoken', access_token, {
-            path:'/',       // 写cookie所在的路径
-            maxAge: 365 * 24 * 60 * 60 * 1000,   // cookie有效时长
-            expires:new Date(Date.now() + 7 * 24 * 60 * 60 * 1000), // cookie失效时间
-            httpOnly:false,  // 是否只用于http请求中获取
-        });
-    }
-    await next();
-});
+// app.use(async function ( ctx, next) {
+//     let token = ctx.cookies.get('btoken');
+//     if(!token){
+//         let data = await wordService.getAudioToken();
+//         let access_token = data.access_token;
+//         ctx.cookies.set('btoken', access_token, {
+//             path:'/',       // 写cookie所在的路径
+//             maxAge: 365 * 24 * 60 * 60 * 1000,   // cookie有效时长
+//             expires:new Date(Date.now() + 7 * 24 * 60 * 60 * 1000), // cookie失效时间
+//             httpOnly:false,  // 是否只用于http请求中获取
+//         });
+//     }
+//     await next();
+// });
 
 app.use(koaStatic(path.join( __dirname,  staticPath)));
 

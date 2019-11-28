@@ -6,6 +6,8 @@ const md5 = require('md5');
 const tool = require('../lib/tool');
 const Sql = require('../lib/sql');
 const config = require('../config');
+const crypto = require('crypto');
+const querystring = require("querystring");
 
 const APP_KEY = config.WORD_APP_KEY;
 const KEY = config.WORD_KEY;
@@ -16,7 +18,11 @@ const SALT = Math.random().toString(32).slice(2);
 const AUDIO_API_KEY = config.AUDIO_API_KEY;
 const AUDIO_SECRET_KEY = config.AUDIO_SECRET_KEY;
 
-
+function truncate(q){
+    var len = q.length;
+    if(len<=20) return q;
+    return q.substring(0, 10) + len + q.substring(len-10, len);
+}
 
 exports.getAudioToken = async function () {
     let url = `http://openapi.baidu.com/oauth/2.0/token?grant_type=client_credentials&client_id=${AUDIO_API_KEY}&client_secret=${AUDIO_SECRET_KEY}`
@@ -24,11 +30,34 @@ exports.getAudioToken = async function () {
     return response.data;
 };
 
-
+// 应用ID 51a433fdcbf4ab82
+// 应用秘钥 GO8nt8g99GFycXOgmJA0dC7oeP5zW8Og
 exports.baseSearch = async function (word,ctx) {
-    let sign = md5(`${APP_KEY}${word}${SALT}${KEY}`);
-    let url = `http://openapi.youdao.com/api?q=${encodeURI(word)}&from=${FROM}&to=${TO}&appKey=${APP_KEY}&salt=${SALT}&sign=${sign}`;
-    let response = await axios.get(url);
+    //英音地址：https://dict.youdao.com/dictvoice?audio=apple&type=1
+    //美音地址：https://dict.youdao.com/dictvoice?audio=apple&type=2
+    //API文档：https://ai.youdao.com/DOCSIRMA/html/%E8%87%AA%E7%84%B6%E8%AF%AD%E8%A8%80%E7%BF%BB%E8%AF%91/API%E6%96%87%E6%A1%A3/%E6%96%87%E6%9C%AC%E7%BF%BB%E8%AF%91%E6%9C%8D%E5%8A%A1/%E6%96%87%E6%9C%AC%E7%BF%BB%E8%AF%91%E6%9C%8D%E5%8A%A1-API%E6%96%87%E6%A1%A3.html
+    //应用Id
+    let APP_KEY = '51a433fdcbf4ab82';
+    //应用密钥
+    let KEY = 'GO8nt8g99GFycXOgmJA0dC7oeP5zW8Og';
+    let salt = (new Date).getTime();
+    let curTime = Math.round(new Date().getTime()/1000);
+    let str1 = APP_KEY + truncate(word) + salt + curTime + KEY;
+    let sha256 = crypto.createHash('sha256');//定义加密方式:md5不可逆,此处的md5可以换成任意hash加密的方法名称；
+    sha256.update(str1);
+    let sign = sha256.digest('hex');  //加密后的值d
+    let url = `http://openapi.youdao.com/api`;
+    let res = querystring.stringify({
+        q:encodeURI(word),
+        appKey: APP_KEY,
+        salt: salt,
+        from: FROM,
+        to: TO,
+        sign: sign,
+        signType: "v3",
+        curtime: curTime,
+    })
+    let response = await axios.get(url + '?' + res);
     return response.data;
 };
 /**

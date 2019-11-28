@@ -13,7 +13,7 @@ controller.all('/getAudioToken',async(ctx,params,next) =>{
     ctx.body = data;
 });
 
-controller.post('/base/search',async(ctx,params,next) =>{
+controller.all('/base/search',async(ctx,params,next) =>{
     if(!params.q){
         throw new Error('请输入要查询的单词')
     }
