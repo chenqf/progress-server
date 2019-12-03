@@ -3,10 +3,10 @@
 
 module.exports = {
     PORT:3001,
-    HOST     : '45.76.169.7',
+    HOST     : '140.143.64.48',
     USER     : 'root',
-    PASSWORD : process.env.DB_PASSWORD,
-    DATABASE : process.env.DB_NAME,
+    PASSWORD : 'cqf5115215473',
+    DATABASE : 'progress_test',
 
     /*有道相关*/
     WORD_APP_KEY:process.env.WORD_APP_KEY,

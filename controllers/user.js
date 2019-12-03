@@ -1,4 +1,4 @@
-
+const moment = require('moment');
 const controller = require('../lib/controller').factory(__filename);
 const db = require('../lib/mysql');
 const md5 = require('md5');
@@ -11,10 +11,15 @@ controller.get('/register', async (ctx,params,next) => {
     if(!params.name || !params.password){
         throw new Error('用户名密码不可为空')
     }
-    let createTime = Date.now();
-    let token = md5(`${params.password}_${createTime}`);
+    let currentTime = new Date();
     let sql = new Sql('user');
-    sql.set({name:params.name,password:md5(params.password),token,createTime});
+    sql.set({
+        name:params.name,
+        password:md5(params.password),
+        token:md5(`${params.password}_${currentTime.getTime()}`),
+        createTime:moment(currentTime).format('YYYY-MM-DD HH:mm:ss'),
+        level:0
+    });
     let data = await db.insert(sql);
     ctx.body = data;
 });
