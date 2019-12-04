@@ -9,12 +9,9 @@ module.exports = {
     DATABASE : 'progress_test',
 
     /*有道相关*/
-    WORD_APP_KEY:process.env.WORD_APP_KEY,
-    WORD_KEY:process.env.WORD_KEY,
+    WORD_APP_KEY:'51a433fdcbf4ab82',
+    WORD_KEY:'GO8nt8g99GFycXOgmJA0dC7oeP5zW8Og',
 
-    /*百度相关*/
-    AUDIO_API_KEY:process.env.AUDIO_API_KEY,
-    AUDIO_SECRET_KEY:process.env.AUDIO_SECRET_KEY,
 
     TOKEN:process.env.TOKEN,
     TOKEN_ID:process.env.TOKEN_ID,
