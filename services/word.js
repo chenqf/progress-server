@@ -56,8 +56,8 @@ exports.insert = async function (wordItem,ctx) {
 
 exports.queryAll = async function(queryItem,ctx){
     let {
-        startNum,
-        pageCount,
+        startNum = 0,
+        pageCount = 10,
         level,
         pre,
         startTime,
@@ -66,7 +66,8 @@ exports.queryAll = async function(queryItem,ctx){
     } = queryItem;
     let sql = new Sql('word');
     sql.limit(startNum,pageCount)
-        .whereEqual({level,name:content})
+    level && sql.whereEqual({level})
+    content && sql.whereEqual({name:content})
     if(pre){
         sql.whereGtEqual({createTime:tool.toDateStartStrByPre(pre)})
         sql.whereLtEqual({createTime:tool.toDateEndStrByPre(pre)})
@@ -79,7 +80,7 @@ exports.queryAll = async function(queryItem,ctx){
     return await db.query(sql);
 }
 
-exports.countAll = async function({startNum = 0,pageCount = 10},ctx){
+exports.countAll = async function(queryItem,ctx){
     let {
         startNum,
         pageCount,
@@ -90,16 +91,14 @@ exports.countAll = async function({startNum = 0,pageCount = 10},ctx){
         content
     } = queryItem;
     let sql = new Sql('word');
-    sql.limit(startNum,pageCount)
-        .whereEqual({level,name:content})
+    level && sql.whereEqual({level})
+    content && sql.whereEqual({name:content})
     if(pre){
         sql.whereGtEqual({createTime:tool.toDateStartStrByPre(pre)})
         sql.whereLtEqual({createTime:tool.toDateEndStrByPre(pre)})
-    }
-    else if(startTime){
-        sql.whereGtEqual({createTime:tool.toDateStr(startTime)})
-    }else if(endTime){
-        sql.whereLtEqual({createTime:tool.toDateStr(endTime)})
+    }else{
+        startTime && sql.whereGtEqual({createTime:tool.toDateStr(startTime)})
+        endTime && sql.whereLtEqual({createTime:tool.toDateStr(endTime)})
     }
     return await db.count(sql);
 }
@@ -120,7 +119,7 @@ exports.update = async function(wordItem,ctx){
 exports.random = async function({level,pageCount},ctx){
     let sql = new Sql('word');
     if(level){
-        sql.whereEqual(level)
+        sql.whereEqual({level})
     }
     sql.random(pageCount);
     return await db.query(sql);
