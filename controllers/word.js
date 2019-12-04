@@ -40,7 +40,7 @@ controller.all('/search',async(ctx,params,next) =>{
         usPhonetic,
         phonetic,
         ukPhonetic,
-        explains:explains.join('；'),
+        explains:JSON.stringify(explains),
         level:1,
         createTime:tool.getCurrentTime()
     }
