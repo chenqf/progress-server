@@ -58,6 +58,7 @@ exports.queryAll = async function(queryItem,ctx){
     let {
         startNum = 0,
         pageCount = 10,
+        order = 'DESC',
         level,
         pre,
         startTime,
@@ -76,6 +77,11 @@ exports.queryAll = async function(queryItem,ctx){
         sql.whereGtEqual({createTime:tool.toDateStr(startTime)})
     }else if(endTime){
         sql.whereLtEqual({createTime:tool.toDateStr(endTime)})
+    }
+    if(order === 'DESC'){
+        sql.orderByDESC('createTime');
+    }else if(order === 'ASC'){
+        sql.orderByASC('createTime');
     }
     return await db.query(sql);
 }

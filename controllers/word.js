@@ -54,6 +54,7 @@ controller.all('/queryAll',async(ctx,params,next) =>{
     let {
         startNum = 0,
         pageCount = 10,
+        order,
         level,
         startTime,
         endTime,
@@ -65,9 +66,10 @@ controller.all('/queryAll',async(ctx,params,next) =>{
         pageCount,
         level,
         pre,
+        order,
         startTime:startTime ? tool.toDateStr(startTime): undefined,
         endTime:endTime ? tool.toDateStr(endTime): undefined,
-        content
+        content // 暂时没用，后期考虑like查询
     }
     //获取数据
     let data = await wordService.queryAll(queryItem,ctx)

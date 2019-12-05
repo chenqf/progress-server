@@ -24,6 +24,7 @@ controller.all('/queryAll',async(ctx,params,next) =>{
     let {
         startNum = 0,
         pageCount = 10,
+        order,
         startTime,
         endTime,
         pre
@@ -32,6 +33,7 @@ controller.all('/queryAll',async(ctx,params,next) =>{
         startNum,
         pageCount,
         pre,
+        order,
         startTime:startTime ? tool.toDateStr(startTime): undefined,
         endTime:endTime ? tool.toDateStr(endTime): undefined
     }
@@ -77,14 +79,13 @@ controller.all('/update',async(ctx,params,next) =>{
     //获取数据
     let data = await noteService.update({
         id,
-        content
-        // ,
-        // createTime:tool.toDateStr(createTime)
+        content,
+        createTime:tool.toDateStr(createTime)
     },ctx)
     
-    // if(!data){
-    //     throw new Error('数据不存在')
-    // }
+    if(!data){
+        throw new Error('数据不存在')
+    }
     ctx.body = data;
 });
 

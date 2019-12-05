@@ -17,6 +17,7 @@ exports.queryAll = async function(queryItem,ctx){
         pre,
         startTime,
         endTime,
+        order = 'DESC',
         content
     } = queryItem;
     let sql = new Sql('note');
@@ -26,10 +27,18 @@ exports.queryAll = async function(queryItem,ctx){
         sql.whereGtEqual({createTime:tool.toDateStartStrByPre(pre)})
         sql.whereLtEqual({createTime:tool.toDateEndStrByPre(pre)})
     }
-    else if(startTime){
-        sql.whereGtEqual({createTime:tool.toDateStr(startTime)})
-    }else if(endTime){
-        sql.whereLtEqual({createTime:tool.toDateStr(endTime)})
+    else{
+        if(startTime){
+            sql.whereGtEqual({createTime:tool.toDateStr(startTime)})
+        }
+        if(endTime){
+            sql.whereLtEqual({createTime:tool.toDateStr(endTime)})
+        }
+    }
+    if(order === 'DESC'){
+        sql.orderByDESC('createTime');
+    }else if(order === 'ASC'){
+        sql.orderByASC('createTime');
     }
     return await db.query(sql);
 }
