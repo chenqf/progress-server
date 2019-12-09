@@ -6,7 +6,7 @@ module.exports = {
     HOST     : process.env.SERVER_HOST,
     USER     : 'root',
     PASSWORD : process.env.DB_PASSWORD,
-    DATABASE : process.env.DB_NAME,
+    DATABASE : process.env.NODE_ENV === 'test' ? 'progress_test' : process.env.DB_NAME,
 
     /*有道相关*/
     WORD_APP_KEY:process.env.WORD_APP_KEY,
