@@ -3,14 +3,14 @@
 
 module.exports = {
     PORT:3001,
-    HOST     : '140.143.64.48',
+    HOST     : process.env.SERVER_HOST,
     USER     : 'root',
-    PASSWORD : 'cqf5115215473',
-    DATABASE : 'progress_test',
+    PASSWORD : process.env.DB_PASSWORD,
+    DATABASE : process.env.DB_NAME,
 
     /*有道相关*/
-    WORD_APP_KEY:'51a433fdcbf4ab82',
-    WORD_KEY:'GO8nt8g99GFycXOgmJA0dC7oeP5zW8Og',
+    WORD_APP_KEY:process.env.WORD_APP_KEY,
+    WORD_KEY:process.env.WORD_KEY,
 
 
     TOKEN:process.env.TOKEN,
